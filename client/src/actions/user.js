@@ -3,14 +3,14 @@ export const ADD_USER = 'ADD_USER';
 export const UPDATE_USER = 'UPDATE_USER';
 export const RESET_PASSWORD = 'RESET_PASSWORD';
 export const SET_USER = 'SET_USER';
-export const CLEAN_USER = 'CLEAN_USER'
+export const CLEAN_USER = 'CLEAN_USER';
+export const GET_USERS = 'GET_USERS';
+export const USER_LOGOUT = 'USER_LOGOUT';
 // const instance = axios.create({
 //     withCredentials: true
 //   })
 
 //CREAR USUARIO
-
-
 export function addUser(data){
     return function (dispatch){
         console.log(data)
@@ -32,9 +32,14 @@ export function setUser (user){
     return {type:SET_USER, payload:user}
 }
 
+//DESLOGUEAR USUARIO!!
+export function userLogout (user){
+    console.log(user);
+    return {type:USER_LOGOUT, payload:user}
+}
+
 
 //MODIFICAR DATOS DE MI USUARIO
-
 export function updateUser(data){
     return function (dispatch){
         console.log(data)
@@ -78,3 +83,17 @@ export function cleanUser(){
     return{type:CLEAN_USER}
 } 
 
+export function getAllUser(data) {
+    if (typeof data !== "object") {
+        return function (dispatch) {
+            return fetch(`http://localhost:3001/user/users/${data}`)
+                .then(response => response.json())
+                .then(json => {
+                    dispatch({
+                        type: 'GET_USERS',
+                        payload: json
+                    });
+                });
+        }
+    }
+}
