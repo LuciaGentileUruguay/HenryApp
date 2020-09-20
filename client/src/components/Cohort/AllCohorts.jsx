@@ -23,7 +23,7 @@ export function AllCohorts({getCohorts,style}){
     .then(data => setCohorts(data.payload))    
   }, [])
   var data
-  if(cohorts){
+  if(cohorts && cohorts !== []){
     data = cohorts.map(cohort => 
       ({
         cohorte: cohort.name,
@@ -33,8 +33,7 @@ export function AllCohorts({getCohorts,style}){
         id: cohort.id
       })
     )
-    console.log(data)
-  }
+  } 
   console.log(cohorts)
   return (
     <div style={style}>  

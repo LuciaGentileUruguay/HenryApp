@@ -1,10 +1,6 @@
 const server = require('express').Router();
 const { Usuario, Cohort } = require('../db.js');
 //const {isAuthenticated,isAdmin} =require('./helpers')  
-
-
-const { Usuario} = require('../db.js');
-//const {isAuthenticated,isAdmin} =require('./helpers')  
   
 //promover un usuario a instructor 
 server.put('/set', (req,res)=> {
@@ -34,10 +30,7 @@ server.put('/set', (req,res)=> {
           ? res.status(404).json([])
           : res.json(instructor)
       })
-      .catch(() => res.status(400).json({
-                error: true,
-                message: 'el id no es válido'
-        })
+      .catch(() => res.status(400).json([])
       )
   })
   
@@ -52,10 +45,7 @@ server.put('/set', (req,res)=> {
         }
     })
       .then(instructors => res.send(instructors))
-      .catch(() => res.status(400).json({
-        error: true,
-        message: 'Error al buscar los instructores'
-       })
+      .catch(() => res.status(400).json([])
       )
   })
   module.exports = server;

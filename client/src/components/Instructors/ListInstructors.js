@@ -24,7 +24,7 @@ export function ListInstructors({getInstructor,style}){
         .then(data => setInstructor(data.payload))     
     }, [])
     var data
-  if(instructor){
+  if(instructor && instructor !== []){
     data = instructor.map(p => 
       ({
         name: p.name,
