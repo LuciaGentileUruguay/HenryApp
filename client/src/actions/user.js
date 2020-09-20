@@ -4,8 +4,9 @@ export const UPDATE_USER = 'UPDATE_USER';
 export const RESET_PASSWORD = 'RESET_PASSWORD';
 export const SET_USER = 'SET_USER';
 export const CLEAN_USER = 'CLEAN_USER';
-export const GET_USERS = 'GET_USERS';
+export const GET_ALL_USERS = 'GET_ALL_USERS';
 export const USER_LOGOUT = 'USER_LOGOUT';
+
 // const instance = axios.create({
 //     withCredentials: true
 //   })
@@ -56,25 +57,27 @@ export function updateUser(data){
 
 // RECUPERAR PASSWORD, RECIBE MAIL USER PARA RECUPERAR PASSWORD
 export function ForgotPass(data){
-    let email = data.email; 
+     
     return function (dispatch){
         console.log(data)
+        const {email,birthday} = data
         return axios({
-            method: "POST",
-            url: `http://localhost:3001/email/send-email/forgotPassword/${data.email}`, 
+            method: "PUT",
+            url: `http://localhost:3001/email/send-email/forgotpassword/`,data, 
             headers: {
                 "Content-Type": "application/json",
             },
             data: {
-                email
+                email,
+                // birthday
             }
     })
         .then(res => {
-            dispatch({type: RESET_PASSWORD, payload: res.data})
-            alert("Datos Actualizados correctamente")
+            dispatch({type: RESET_PASSWORD})
+            alert("Contraseña reiniciada!")
         })
         .catch(err =>{
-            alert(err)
+            alert("Usuario no encontrado!")
         })
     }
 }
@@ -96,4 +99,23 @@ export function getAllUser(data) {
                 });
         }
     }
+}
+
+//COMPLETAR EL RESTO DE LOS DATOS DEL USUARIO INVITADO
+export function setData(data){
+    return function (dispatch){
+        console.log(data)
+        return axios.put(`http://localhost:3001/user/completeprofile/${data.id}`, data)
+        .then(res => {
+            dispatch({type: USER_LOGOUT, payload: res.data})
+            
+        })
+        .catch(err =>{
+            alert(err)
+        })
+    }
+}
+export function getAllUsers(data) {
+    console.log(data)
+    return {type:GET_ALL_USERS, payload: data}
 }

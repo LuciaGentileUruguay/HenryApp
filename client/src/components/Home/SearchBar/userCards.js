@@ -7,60 +7,87 @@ import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
 import HenryIcon from '../../../images/henryUserIcon.jpg'
 import Link from '@material-ui/core/Link';
+import {connect} from 'react-redux';
 
-// const useStyles = makeStyles((theme) => ({
-//     nameLastName: {
-//       display: 'flex',
-//       marginLeft: '10px',
-//       color: 'black'
-//     }
-// }));
+const useStyles = makeStyles((theme) => ({
+    nameLastName: {
+      display: 'flex',
+      marginLeft: '10px',
+      color: 'black'
+    }
+}));
 
 
-export  function userCard(usuarios){
-    // const classes = useStyles();
-    console.log('usuarios')
-    console.log(usuarios)
-  
-    return(
-      <List> 
-        <p>hola</p>
-            {(typeof usuarios !== 'object') && usuarios.map(UsuarioEncontrado => (
-             
-                
-              <div key={UsuarioEncontrado.id}>
-                 {console.log(UsuarioEncontrado)}
-                 <p>hola</p> 
-                 
-                 
-                <ListItem alignItems="flex-start" >
-                  <Avatar alt="Remy Sharp" src={HenryIcon} />
-                 
-                  <Typography  
+export function UserCard(props){
+    const classes = useStyles();
+    //usuarios.map(item=>console.log(item))
+
+    return (
+      <div>
+         
+       
+            {props.user.usuario && props.user.usuario.map((item) =>
+            <List >
+            <ListItem >
+            <Avatar key={item.id} alt="Remy Sharp" src={HenryIcon} />
+            <Typography  
                   component="span"
                   variant="body2"
-                // className={classes.nameLastName)
+                className={classes.nameLastName}
                   >
-                  <Link color="black" href={`/profile/${UsuarioEncontrado.id}`}>
-                  {UsuarioEncontrado.name + " " + UsuarioEncontrado.lastName}
-                   </Link>
-                  </Typography>
-                </ListItem>
-                <Divider variant="inset" component="li" />
-             
-              {console.log('Usdfsdfs')}
-              </div>
-                
-            )
+            <Link color="black" href={`/profile/${item.id}`}>
+              {item.name + ' ' + item.lastName}
+              </Link>
+            </Typography>
+            </ListItem>
+            <Divider variant="inset" component="li" />
+            </List>
             )
             }
-        </List>
-    );
-}
+        
+      </div>
+    )
 
+    // return(
+    //   <List> 
+    //         {usuarios.map(UsuarioEncontrado => (
+             
+                
+    //           <div key={UsuarioEncontrado.id}>
+    //              {console.log(UsuarioEncontrado)}
+    //              <p>hola</p> 
+                 
+                 
+    //             <ListItem alignItems="flex-start" >
+    //               <Avatar alt="Remy Sharp" src={HenryIcon} />
+                 
+    //               <Typography  
+    //               component="span"
+    //               variant="body2"
+    //             // className={classes.nameLastName)
+    //               >
+    //               <Link color="black" href={`/profile/${UsuarioEncontrado.id}`}>
+    //               {UsuarioEncontrado.name + " " + UsuarioEncontrado.lastName}
+    //                </Link>
+    //               </Typography>
+    //             </ListItem>
+    //             <Divider variant="inset" component="li" />
+             
+    //           {console.log('Usdfsdfs')}
+    //           </div>
+                
+    //         )
+    //         )
+    //         }
+    //     </List>
+    // );
+  }
 
-
-
-
-
-export default userCard;
+  const mapStateToProps = state => {		
+    return {
+      user: state.user,		
+      usuario: state.usuario,
+    }		
+  }
+      
+  export default connect(mapStateToProps)(UserCard);  
