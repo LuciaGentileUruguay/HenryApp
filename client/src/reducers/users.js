@@ -1,5 +1,5 @@
 
-import {ADD_USER, UPDATE_USER, RESET_PASSWORD, SET_USER, CLEAN_USER, GET_USERS, USER_LOGOUT} from '../actions/user.js'
+import {ADD_USER, UPDATE_USER, RESET_PASSWORD, SET_USER, CLEAN_USER, GET_ALL_USERS, USER_LOGOUT, COMPLETE_USER} from '../actions/user.js'
 import { PROMOTE_PM, GET_PM, GET_PM_DETAIL} from '../actions/pm'
 import { PROMOTE_STUDENT, GET_STUDENT, GET_STUDENT_DETAIL, SET_COHORT } from '../actions/student'
 
@@ -8,11 +8,8 @@ import { PROMOTE_STUDENT, GET_STUDENT, GET_STUDENT_DETAIL, SET_COHORT } from '..
 const initialState ={
     user:{
         id: 0,
-        isAdmin: false
     },
     email: [],
-    userDetail:{},
-    searchUsers: []
 
 }
 
@@ -32,7 +29,6 @@ export default function user (state = initialState, action){
     if (action.type === RESET_PASSWORD){
         return {
             ...state,
-            email: action.payload
         }
     }
 
@@ -87,18 +83,24 @@ export default function user (state = initialState, action){
     if (action.type === USER_LOGOUT){
         return{
           ...state,
-          user: {}
+          user: {id:0},
+          usuario: {},
+          userDetail:{}
       }
     }
 
     if (action.type === CLEAN_USER){
         return state = initialState
     }
-    if (action.type === GET_USERS){
+
+    if (action.type === GET_ALL_USERS){
+       // console.log(action.type)
+        //console.log(action.payload)
         return {
             ...state,
-            searchUsers: action.payload
+            usuario: action.payload
         }
     }
+
     return state
 }

@@ -1,31 +1,26 @@
-import React,{useState} from 'react';
-import Axios from 'axios';
+import React,{useEffect, useState} from 'react';
+//import Axios from 'axios';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
+//import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
+//import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import {setUser} from '../../actions/user.js';
-import {setRedirect, setRedirectOff} from '../../actions/global'
+import {setData, userLogout} from '../../actions/user.js';
+//import {setRedirect, setRedirectOff} from '../../actions/global'
 import {connect} from 'react-redux';
-import UserData from './UserData.js';
+//import UserData from './UserData.js';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-// import { useHistory } from 'react-router-dom';
-/*
-
-este es el inicio de sesion, los pedazos de codigo comentados(linea 11 y 65-67) me tiraban error
-//Argentina, uruguay, chile, colombia
-*/
+import { useHistory } from 'react-router-dom';
 
 //ESTILOS DE MATERIAL UI
 const useStyles = makeStyles((theme) => ({
@@ -56,9 +51,18 @@ const useStyles = makeStyles((theme) => ({
 
 
 export function Register(props) {
-  
     const classes = useStyles();
+    const history = useHistory();
+    useEffect(()=>{
+      if (props.user.user.name){
+        props.userLogout();
+        alert('Contraseña actualizada sera enviado al login!')
+        history.push('/')
+      }
+    })
+    //SE MANEJA EL ESTADO COMPLETO!
     const [input,setInput]=useState({
+        id: props.user.user.id,
         name:'',
         lastName:'',
         birthday: '',
@@ -67,36 +71,30 @@ export function Register(props) {
         provincia: '',
         github: '',
         gmail: '',
-        mobilephone: ''
     });
-
-    const verifyUser = function(e){
-      e.preventDefault();
-      Axios.get("http://localhost:3001/user/"+input.email)
-      .then(res=>{
-        console.log(res.data)
-        if (res.data.length===0){
-          let user = {
-            name:input.name,
-            lastName:input.lastName,
-            email:input.email,
-            password:input.password
-          }
-          let status = true
-          props.setUser(user)
-          props.setRedirect(status)
-
-        }else{alert("El mail ya esta en uso")}
-      })
-    }
-
-
+    
 
     const onSend = function(e){
       e.preventDefault();
-      props.addUser(input)
+      //SE VALIDAN TODOS LOS CAMPOS PARA MANDAR AL BACK!
+      if (!input.name || !input.lastName || !input.birthday || !input.country || !input.address || !input.provincia){
+        alert("Se deben completar todos los campos!")
+        return;
+      } else {
+        //SI TODO ESTA OK-> MANDA LOS DATOS!
+        props.setData(input)
+        alert("Datos Actualizados correctamente, ya puede iniciar sesion en HenryApp");
+        return history.push('/');
+      }
     
     }
+
+    // const onSend = function(e){
+    //   e.preventDefault();
+    //   console.log(input)
+    //   props.setData(input)
+    //   logout(input)
+    // }
 
     //MANEJO DE ONCHANGE()
     const handleInputChange = function(e) {
@@ -104,14 +102,7 @@ export function Register(props) {
           ...input,
           [e.target.name]:e.target.value
         })
-        console.log(input)
-        setErrors(validate({
-          ...input,
-          [e.target.name]: e.target.value,
-        }));
       }
-
-      const [errors, setErrors] = useState({});
 
     return (
       <Container component="main" maxWidth="xs">
@@ -127,13 +118,13 @@ export function Register(props) {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  error={errors.name}
+                  //error={errors.name}
                   //error={input.name.length===0 ? true : false}
                   autoComplete="fname"
                   name="name"
                   variant="outlined"
                   required
-                  helperText={errors.name}
+                 // helperText={errors.name}
                   fullWidth
                   //helperText={false ? "Este campo es requerido" : null}
                   id="firstName"
@@ -144,8 +135,8 @@ export function Register(props) {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  error={errors.lastName}
-                  helperText={errors.lastName}
+                  //error={errors.lastName}
+                  //helperText={errors.lastName}
                   variant="outlined"
                   required
                   fullWidth
@@ -156,7 +147,6 @@ export function Register(props) {
                   onChange={(e) => handleInputChange(e)}
                 />
               </Grid>
-
               <Grid  item xs={12} className={classes.birthday}>
                 <TextField
                   defaultValue="2017-05-24"
@@ -166,7 +156,7 @@ export function Register(props) {
                   id="date"
                   type="date"
                   label="birthday"
-                  name="lastName"
+                  name="birthday"
                   autoComplete="off"
                   onChange={(e) => handleInputChange(e)}
                 />
@@ -231,19 +221,6 @@ export function Register(props) {
                   variant="outlined"
                   required
                   fullWidth
-                  name="mobilephone"
-                  label="Numero de celular"
-                  id="mobilephone"
-                  type="number"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(e)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
                   name="github"
                   label="cuenta de Github"
                   id="github"
@@ -256,9 +233,9 @@ export function Register(props) {
                   variant="outlined"
                   required
                   fullWidth
-                  name="google"
+                  name="gmail"
                   label="cuenta de google"
-                  id="github"
+                  id="gmail"
                   autoComplete="off"
                   onChange={(e) => handleInputChange(e)}
                 />
@@ -267,24 +244,19 @@ export function Register(props) {
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
                   label="Deseo recibir notificaciones e información via email."
                 />
-
             </Grid>
-
             <Button
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={(e)=>verifyUser(e)}
+              onClick={(e)=>onSend(e, input)}
             >
-              Continuar
+              Registrar
             </Button>
           </form>
         </div>
-        {/* <Box mt={5}>
-          <Copyright />
-        </Box> */}
       </Container>
     );
 }
@@ -292,27 +264,16 @@ export function Register(props) {
 const mapStateToProps = state => {		
   return {		
     user: state.user,
-  //  redirect: state.global.redirect
   }		
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    setUser: (user)=>dispatch(setUser(user)),
     //setRedirect:(status)=>dispatch(setRedirect(status)),
     //setRedirectOff:()=>dispatch(setRedirectOff())
+    userLogout:()=>dispatch(userLogout()),
+    setData: (user)=>dispatch(setData(user)),
   }
 }
     
-export function validate(input) {
-  let errors = {};
- if(!input.name){
-   errors.name= 'Por favor introduzca su nombre'
- }
- if(!input.lastName){
-  errors.lastName= 'Por favor introduzca su apellido'
- }
-  return errors;
-};
-
 export default connect(mapStateToProps, mapDispatchToProps)(Register);

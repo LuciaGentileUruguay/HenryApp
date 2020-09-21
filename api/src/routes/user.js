@@ -27,7 +27,7 @@ server.put('/inviteuser', (req,res,next)=>{
   //BUSCA EL MAIL EN LA BASE DE DATOS
   db.Usuario.findOne({
     where:{
-      email
+      email: email
     }
   })
   //DEVUELVE EL MAIL MODIFICA LA PASSWORD Y GUARDA!
@@ -37,7 +37,7 @@ server.put('/inviteuser', (req,res,next)=>{
       user.update({
         password
       })
-      res.status(201).send(user);
+     return res.status(201).send(user);
     } else {
       res.status(400).json({err:"El usuario tiene un perfil asociado!"})
       console.log(res.send);
@@ -150,6 +150,36 @@ server.get('/users/:id', (req,res,next) => {
   
 })
 
+server.put('/completeprofile/:id', (req, res, next) => {
+ var {id} = req.body
+ console.log(id)
+ console.log(req.body)
+  var userUp = {
+    name: req.body.name,
+    lastName: req.body.lastName,
+    birthday: req.body.birthday,
+    address: req.body.address,
+    country: req.body.country,
+    about: req.body.about,
+    email: req.body.email,
+    password: req.body.password,
+    profile: req.body.profile,
+    rol: req.body.rol,
+  }
+
+  db.Usuario.findOne({
+    where: {
+      id
+    }
+  }).then(user => {
+    user.update(userUp)
+      .then(newUser => {
+        newUser.save()
+        res.status(200)
+        return res.json(newUser);
+      })
+  }).catch(next)
+})
 
 
 
