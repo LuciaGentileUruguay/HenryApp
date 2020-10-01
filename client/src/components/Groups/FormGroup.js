@@ -17,7 +17,9 @@ import {useHistory } from 'react-router-dom'
     },
     inputGroup:{
       fontSize:"1.5rem",
-      right:1
+      right:1,
+      fontWeight: "bold",
+      color: "white"
     }
   }));
   
@@ -75,20 +77,20 @@ const sleep= function(ms) {
   }
 
   return (
-    <div style={style}>  
-    <Container component="main" maxWidth="sm" style={{margin:"auto",backgroundColor:"rgb(220,220,220)"}}>
-      <Typography component="h1" variant="h4" align="center">  Crear Grupos </Typography>
+    <div style = {style}>
+    <Container component="main" class="bg-dark" style={{margin:"120px", maxWidth:"sm"}}>
+      <h2 class="bg-dark text-warning text-center" style={{padding: '10px'}}>  Crear Grupos </h2>
       <Grid container style={{margin:"auto"}}>
-        <Grid item xs={6}> <Typography component="h1" variant="h5">  Cohorte: </Typography> </Grid>
-        <Grid item xs={6}> <Typography component="h1" variant="h5" align="right">  {cohort?cohort.name:"..."} </Typography> </Grid>
+        <Grid item xs={6}> <h4 class="table table-dark" style={{padding: '10px'}}>  Cohorte: </h4> </Grid>
+        <Grid item xs={6}> <h4 class="table table-dark" style={{padding: '10px', align:"right"}}>  {cohort?cohort.name:"..."} </h4> </Grid>
         <Grid container>
-          <Grid item xs={6}> <Typography component="h1" variant="h5"> Alumnos totales </Typography> </Grid>
-          <Grid item xs={6}> <Typography component="h1" variant="h5" align="right"> {cohort?cohort.usuarios.length:"..."} </Typography> </Grid>
-          <Grid item xs={6}> <Typography component="h1" variant="h5"> PMs disponibles </Typography> </Grid>
-          <Grid item xs={6}> <Typography component="h1" variant="h5" align="right"> {pm.length} </Typography> </Grid>
+          <Grid item xs={6}> <h4 class="table table-dark" style={{padding: '10px'}}> Alumnos totales </h4> </Grid>
+          <Grid item xs={6}> <h4 class="table table-dark" style={{padding: '10px', align:"right"}}> {cohort?cohort.usuarios.length:"..."} </h4> </Grid>
+          <Grid item xs={6}> <h4 class="table table-dark" style={{padding: '10px'}}> PMs disponibles </h4> </Grid>
+          <Grid item xs={6}> <h4 className={classes.inputGroup} > {pm.length} </h4> </Grid>
         </Grid>
         <Grid container style={{justifyContent:"space-between"}}>
-          <Grid item xs={6}> <Typography component="h1" variant="h5"> Ingrese cantidad de grupos</Typography> </Grid>
+          <Grid item xs={6}> <h4 class="table table-dark" style={{padding: '10px'}}> Cantidad de grupos</h4> </Grid>
           <Grid item xs={2} sm={1}> <Input type="number" className={classes.inputGroup} name="grupos" defaultValue={1} onChange={(e) => handleInputChange(e)}/> </Grid>
         </Grid>
         <Grid style={{margin:"auto"}} item xs={6}>
